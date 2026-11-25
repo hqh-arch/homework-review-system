@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hello.mapper.StuMapper">
+
+    <resultMap type="Stu" id="StuResult">
+    </resultMap>
+
+    <sql id="selectStuVo">
+        select * from v_hello_stu
+    </sql>
+
+    <select id="list" parameterType="Stu" resultMap="StuResult">
+        <include refid="selectStuVo"/>
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="cond != null and cond != ''">and (name like #{cond} or areaname like #{cond} or code like #{cond} or remark like #{cond})</if>
+            <if test="code != null and code != ''">and code = #{code}</if>
+            <if test="name != null and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="age != null ">and age = #{age}</if>
+            <if test="sex != null and sex != ''">and sex = #{sex}</if>
+            <if test="areaid != null and areaid != ''">and areaid = #{areaid}</if>
+            <if test="banjiid != null and banjiid != ''">and banjiid = #{banjiid}</if>
+            <if test="areaname != null and areaname != ''">and areaname like concat('%', #{areaname}, '%')</if>
+            <if test="banjiname != null and banjiname != ''">and banjiname like concat('%', #{banjiname}, '%')</if>
+        </where>
+    </select>
+
+    <insert id="add" parameterType="Stu">
+        insert into hello_stu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">id,</if>
+            <if test="code != null">code,</if>
+            <if test="name != null">name,</if>
+            <if test="age != null">age,</if>
+            <if test="sex != null">sex,</if>
+            <if test="areaid != null">areaid,</if>
+            <if test="banjiid != null">banjiid,</if>
+            <if test="img != null">img,</if>
+            <if test="attaches != null">attaches,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">#{id},</if>
+            <if test="code != null">#{code},</if>
+            <if test="name != null">#{name},</if>
+            <if test="age != null">#{age},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="areaid != null">#{areaid},</if>
+            <if test="banjiid != null">#{banjiid},</if>
+            <if test="img != null">#{img},</if>
+            <if test="attaches != null">#{attaches},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="Stu">
+        update hello_stu
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null">code = #{code},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="areaid != null">areaid = #{areaid},</if>
+            <if test="banjiid != null">banjiid = #{banjiid},</if>
+            <if test="img != null">img = #{img},</if>
+            <if test="attaches != null">attaches = #{attaches},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="remove" parameterType="String">
+        delete from hello_stu where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

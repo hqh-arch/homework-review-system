@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hello.mapper.AreaMapper">
+
+    <resultMap type="Area" id="AreaResult">
+    </resultMap>
+
+    <sql id="selectAreaVo">
+        select * from hello_area
+    </sql>
+
+    <select id="list" parameterType="Area" resultMap="AreaResult">
+        <include refid="selectAreaVo"/>
+        <where>
+            <if test="pid != null and pid != ''">and pid = #{pid}</if>
+            <if test="cond != null and cond != ''">and (name like #{cond} or fullname like #{cond} or code like #{cond})</if>
+            <if test="fullname != null and fullname != ''">and fullname like concat('%', #{fullname}, '%')</if>
+            <if test="code != null and code != ''">and code = #{code}</if>
+            <if test="sort != null ">and sort = #{sort}</if>
+        </where>
+        order by sort
+    </select>
+
+    <insert id="add" parameterType="Area">
+        insert into hello_area
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="pid != null">pid,</if>
+            <if test="name != null">name,</if>
+            <if test="fullname != null">fullname,</if>
+            <if test="code != null">code,</if>
+            <if test="sort != null">sort,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="pid != null">#{pid},</if>
+            <if test="name != null">#{name},</if>
+            <if test="fullname != null">#{fullname},</if>
+            <if test="code != null">#{code},</if>
+            <if test="sort != null">#{sort},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="Area">
+        update hello_area
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pid != null">pid = #{pid},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="fullname != null">fullname = #{fullname},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="sort != null">sort = #{sort},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="remove" parameterType="String">
+        delete from hello_area where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

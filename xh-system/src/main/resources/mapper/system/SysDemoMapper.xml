@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysDemoMapper">
+    
+    <resultMap type="SysDemo" id="SysDemoResult">
+    </resultMap>
+
+    <sql id="selectSysDemoVo">
+        select * from sys_demo
+    </sql>
+
+    <select id="list" parameterType="SysDemo" resultMap="SysDemoResult">
+        <include refid="selectSysDemoVo"/>
+        <where>
+            <if test="cond != null and cond != ''">and (name like #{cond} or id like #{cond} or remark like #{cond})</if>
+            <if test="id != null and id != ''">and (id = #{id})</if>
+        </where>
+    </select>
+    
+    <select id="getOne" parameterType="String" resultMap="SysDemoResult">
+        <include refid="selectSysDemoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="add" parameterType="SysDemo">
+        insert into sys_demo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="age != null">age,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="age != null">#{age},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="update" parameterType="SysDemo">
+        update sys_demo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="String">
+        delete from sys_demo where id = #{id}
+    </delete>
+
+    <delete id="remove" parameterType="String">
+        delete from sys_demo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.hello.mapper.CusMapper">
+
+    <resultMap type="Cus" id="CusResult">
+    </resultMap>
+
+    <sql id="selectCusVo">
+        select * from hello_cus
+    </sql>
+
+    <select id="list" parameterType="Cus" resultMap="CusResult">
+        <include refid="selectCusVo"/>
+        <where>
+            <if test="cond != null and cond != ''">and (name like #{cond} or code like #{cond})</if>
+            <if test="name != null and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="code != null and code != ''">and code = #{code}</if>
+        </where>
+    </select>
+
+    <select id="getOne" parameterType="String" resultMap="CusResult">
+        <include refid="selectCusVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="add" parameterType="Cus">
+        insert into hello_cus
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="code != null">code,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="code != null">#{code},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="Cus">
+        update hello_cus
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="code != null">code = #{code},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="String">
+        delete
+        from hello_cus
+        where id = #{id}
+    </delete>
+
+    <delete id="remove" parameterType="String">
+        delete from hello_cus where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
